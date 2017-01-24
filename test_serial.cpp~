@@ -31,9 +31,11 @@ int main(int argc, char** argv) {
     ip::address_v4 targetIP;
     targetIP.from_string("140.172.240.223", ec);
 
+    ip::udp::socket socket_(udp_service, );
     boost::asio::ip::udp::endpoint endpoint_(targetIP, 15211);
     
     ip::udp::socket socket_(udp_service,endpoint_.protocol());
+    ip::udp::socket socket_(udp_service, );
 
     
     socket_.set_option(ip::udp::socket::reuse_address(true));
