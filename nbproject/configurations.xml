@@ -16,6 +16,7 @@
                    projectFiles="true">
       <itemPath>Alicat.cpp</itemPath>
       <itemPath>Device.cpp</itemPath>
+      <itemPath>main_test.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -47,6 +48,8 @@
       </item>
       <item path="Device.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="main_test.cpp" ex="false" tool="1" flavor2="0">
+      </item>
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
@@ -75,6 +78,8 @@
       <item path="Device.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Device.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main_test.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

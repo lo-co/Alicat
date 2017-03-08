@@ -15,8 +15,9 @@
 
 namespace device {
 
-    Alicat::Alicat(const std::string &id, const std::string &addr) :
-    Device(id), address(addr) {
+    Alicat::Alicat(const std::string &id, const std::string &addr, 
+            boost::shared_ptr<BufferedAsyncSerial> *port) :
+    Device(id), address(addr), serial_port(port) {
         
         // TODO: Here we will add code to open the serial connection; use the 
         // paradigm as the session data object - when we go to grab the serial 
@@ -29,6 +30,11 @@ namespace device {
     Alicat::retrieve_data(){
         ;
     }
+    void Alicat::set_flowrate(double Q){
+            
+            std::string cmd =  
+                    address + std::to_string((int)(Q/range)*64000) + '\r';
+        }
 
     Alicat::~Alicat() {
         
