@@ -6,6 +6,8 @@
                    projectFiles="true">
       <itemPath>Alicat.h</itemPath>
       <itemPath>Device.h</itemPath>
+      <itemPath>SerialSession.h</itemPath>
+      <itemPath>Session.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -16,7 +18,11 @@
                    projectFiles="true">
       <itemPath>Alicat.cpp</itemPath>
       <itemPath>Device.cpp</itemPath>
+      <itemPath>SerialSession.cpp</itemPath>
+      <itemPath>Session.cpp</itemPath>
       <itemPath>main_test.cpp</itemPath>
+      <itemPath>main_test_simple.cpp</itemPath>
+      <itemPath>test_serial.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -48,7 +54,19 @@
       </item>
       <item path="Device.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="SerialSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SerialSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Session.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Session.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main_test.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="main_test_simple.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="test_serial.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -79,7 +97,19 @@
       </item>
       <item path="Device.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="SerialSession.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SerialSession.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Session.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Session.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main_test.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="main_test_simple.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="test_serial.cpp" ex="false" tool="1" flavor2="0">
       </item>
     </conf>
   </confs>

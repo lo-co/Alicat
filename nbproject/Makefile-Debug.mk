@@ -37,7 +37,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/Alicat.o \
 	${OBJECTDIR}/Device.o \
-	${OBJECTDIR}/main_test.o
+	${OBJECTDIR}/SerialSession.o \
+	${OBJECTDIR}/Session.o \
+	${OBJECTDIR}/main_test.o \
+	${OBJECTDIR}/main_test_simple.o \
+	${OBJECTDIR}/test_serial.o
 
 
 # C Compiler Flags
@@ -74,10 +78,30 @@ ${OBJECTDIR}/Device.o: Device.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Device.o Device.cpp
 
+${OBJECTDIR}/SerialSession.o: SerialSession.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SerialSession.o SerialSession.cpp
+
+${OBJECTDIR}/Session.o: Session.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Session.o Session.cpp
+
 ${OBJECTDIR}/main_test.o: main_test.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_test.o main_test.cpp
+
+${OBJECTDIR}/main_test_simple.o: main_test_simple.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_test_simple.o main_test_simple.cpp
+
+${OBJECTDIR}/test_serial.o: test_serial.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/test_serial.o test_serial.cpp
 
 # Subprojects
 .build-subprojects:
