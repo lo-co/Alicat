@@ -13,153 +13,25 @@
 
 #include "SerialSession.h"
 #include <boost/bind.hpp>
+#include <boost/asio/error.hpp>
 
 using namespace boost;
 using namespace std;
 
-SerialSession::SerialSession(serial_struct sdata) : io(), port(io), timer(io), Session(serial_data) {
-    serial_data = sdata;
-    connect();
+SerialSession::SerialSession(const serial_struct& sdata) : psettings(sdata.psettings), msg(sdata.msg_set), Session(sdata) {
+
+    asio::io_service serial_service;
+    serial_port_ = std::shared_ptr<asio::serial_port>(new asio::serial_port(serial_service, sdata.dev));
 }
 
-bool SerialSession::connected() const{
-    
-    return port.is_open();
-    
-}
-
-void SerialSession::writeString(string s)
-{
-    // Add the termination character...
-    if (serial_data.use_term_char) s += serial_data.termination_char;
-    
-    asio::write(port,asio::buffer(s.c_str(),s.size()));
-}
-
-void SerialSession::read(char *data, size_t size)
-{
-    if(readData.size()>0)//If there is some data from a previous read
-    {
-        istream is(&readData);
-        size_t toRead=min(readData.size(),size);//How many bytes to read?
-        is.read(data,toRead);
-        data+=toRead;
-        size-=toRead;
-        if(size==0) return;//If read data was enough, just return
-    }
-    
-    //setupParameters=ReadSetupParameters(data,size);
-    //performReadSetup(setupParameters);
-
-    //For this code to work, there should always be a timeout, so the
-    //request for no timeout is translated into a very long timeout
-    if(serial_data.timeout!=posix_time::seconds(0)) timer.expires_from_now(serial_data.timeout);
-    else timer.expires_from_now(posix_time::hours(100000));
-    
-    timer.async_wait(boost::bind(&SerialSession::timeoutExpired,this,
-                asio::placeholders::error));
-    
-    result=resultInProgress;
-    bytesTransferred=0;
-    for(;;)
-    {
-        io.run_one();
-        switch(result)
-        {
-            case resultSuccess:
-                timer.cancel();
-                return;
-            case resultTimeoutExpired:
-                port.cancel();
-                throw(timeout_exception("Timeout expired"));
-            case resultError:
-                timer.cancel();
-                port.cancel();
-                throw(boost::system::system_error(boost::system::error_code(),
-                        "Error while reading"));
-            //if resultInProgress remain in the loop
-        }
-    }
-}
-
-string SerialSession::readString(size_t size)
-{
-    string result(size,'\0');//Allocate a string with the desired size
-    read(&result[0],size);//Fill it with values
-    return result;
-}
-
-string SerialSession::readStringUntil()
-{
-
-    //For this code to work, there should always be a timeout, so the
-    //request for no timeout is translated into a very long timeout
-    if(serial_data.timeout!=posix_time::seconds(0)) timer.expires_from_now(serial_data.timeout);
-    else timer.expires_from_now(posix_time::hours(100000));
-
-    timer.async_wait(boost::bind(&SerialSession::timeoutExpired,this,
-                asio::placeholders::error));
-
-    result=resultInProgress;
-    bytesTransferred=0;
-    
-    for(;;)
-    {
-        io.run_one();
-        switch(result)
-        {
-            case resultSuccess:
-                {
-                    timer.cancel();
-                    bytesTransferred-=serial_data.termination_char.size();//Don't count delim
-                    istream is(&readData);
-                    string result(bytesTransferred,'\0');//Alloc string
-                    is.read(&result[0],bytesTransferred);//Fill values
-                    is.ignore(serial_data.termination_char.size());//Remove delimiter from stream
-                    return result;
-                }
-            case resultTimeoutExpired:
-                port.cancel();
-                throw(timeout_exception("Timeout expired"));
-            case resultError:
-                timer.cancel();
-                port.cancel();
-                throw(boost::system::system_error(boost::system::error_code(),
-                        "Error while reading"));
-            //if resultInProgress remain in the loop
-        }
-    }
-}
-void SerialSession::timeoutExpired(const boost::system::error_code& error)
-{
-     if(!error && result==resultInProgress) result=resultTimeoutExpired;
-}
-
-void SerialSession::connect() {
-    if (connected()) close_connection();
-    port.open(serial_data.port);
-    port.set_option(asio::serial_port_base::baud_rate(serial_data.baud_rate));
-    port.set_option(serial_data.parity);
-    port.set_option(serial_data.csize);
-    port.set_option(serial_data.flow);
-    port.set_option(serial_data.stop);
-}
-
-void SerialSession::performReadSetup(const ReadSetupParameters& param)
-{
-    if(param.fixedSize)
-    {
-        asio::async_read(port,asio::buffer(param.data,param.size),boost::bind(
-                &TimeoutSerial::readCompleted,this,asio::placeholders::error,
-                asio::placeholders::bytes_transferred));
-    } else {
-        asio::async_read_until(port,readData,param.delim,boost::bind(
-                &TimeoutSerial::readCompleted,this,asio::placeholders::error,
-                asio::placeholders::bytes_transferred));
+void SerialSession::close_port() {
+    if (serial_port_->is_open()) {
+        serial_port_->close();
     }
 }
 
 SerialSession::~SerialSession() {
-    
-    if (connected()) close_connection();
+
+    if (serial_port_->is_open()) serial_port_->close();
+
 }
